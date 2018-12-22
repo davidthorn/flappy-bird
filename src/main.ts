@@ -1,17 +1,4 @@
-type Application = {
-    win: { 
-        w: number , 
-        h : number 
-    }
-    ctx: CanvasRenderingContext2D | undefined
-    canvas: HTMLCanvasElement | undefined
-    bird: {
-        x: number,
-        y: number,
-        width: number,
-        height: number
-    }
-}
+import  { application , Application } from './Application'
 
 const drawBird = (appContext: CanvasRenderingContext2D , application: Application) => {
     const { bird } = application
@@ -24,30 +11,9 @@ const animate = (application: Application)  => {
     const { ctx, bird } = application
     if(ctx === undefined)  return
     drawBird(ctx, application)
-    
-    
 }
 
-
 const runApp = () => {
-
-    let _canvas: HTMLCanvasElement
-    let _cxt: CanvasRenderingContext2D
-
-    let application: Application = {
-        win: {
-            w: window.innerWidth,
-            h: window.innerHeight
-        },
-        ctx: undefined,
-        canvas: undefined,
-        bird: {
-            x: 0,
-            y: 0,
-            width: 50,
-            height: 50
-        }
-    }
 
     window.addEventListener('load' , () => {
         console.log('app running')
@@ -57,6 +23,12 @@ const runApp = () => {
             animate(application)
         }, 1000 / 1)
         
+    })
+
+    document.addEventListener('keydown' , (e) => {
+        console.log('key down' , {
+            e
+        })
     })
     
     return () => {
@@ -79,4 +51,5 @@ const runApp = () => {
 const app = runApp()
 window.addEventListener('load' , app)
 window.addEventListener('resize' , app)
+
 
