@@ -1,28 +1,28 @@
-import  { application , Application } from './Application'
-
-const drawBird = (appContext: CanvasRenderingContext2D , application: Application) => {
-    const { bird } = application
-    const { x,y, width , height } = bird
-    appContext.fillStyle = 'red'
-    appContext.fillRect(x,y,width , height)
-}
+import  { Application } from './Application'
+import { Bird } from './Bird'
 
 const animate = (application: Application)  => {
-    const { ctx, bird } = application
-    if(ctx === undefined)  return
-    drawBird(ctx, application)
+    
+    application.draw()
+    requestAnimationFrame(() => {
+        animate(application)
+    })
 }
 
 const runApp = () => {
 
+    const bird = new Bird()
+
+    const application = new Application({
+        w: window.innerWidth,
+        h: window.innerHeight
+    } , bird)
+
     window.addEventListener('load' , () => {
-        console.log('app running')
-        application.canvas = document.createElement('canvas') as HTMLCanvasElement
-        application.ctx = application.canvas.getContext('2d') as CanvasRenderingContext2D
-        setInterval(() => {
+        application.initialise(document.createElement('canvas') as HTMLCanvasElement)
+        requestAnimationFrame(() => {
             animate(application)
-        }, 1000 / 1)
-        
+        })
     })
 
     document.addEventListener('keydown' , (e) => {
@@ -34,16 +34,12 @@ const runApp = () => {
     return () => {
         if(application.canvas === undefined) return
         if(application.ctx === undefined) return
-        const { ctx, canvas, win } = application
+        const { canvas } = application
 
-        application.canvas.width = window.innerWidth
-        application.canvas.height = window.innerHeight
-        
-        application.win.h = window.innerWidth
-        
-        ctx.fillStyle = 'black'
-        ctx.fillRect(0,0, win.w , win.h)
-        
+        application.setWindowInfo({
+            w: window.innerWidth,
+            h: window.innerHeight
+        })
         document.body.appendChild(canvas)
     }
 }
