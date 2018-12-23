@@ -2,7 +2,6 @@ import { fileURLToPath } from "url";
 
 export interface BirdType {
     isFlapping(): boolean
-    flapStrength: number
     x: number
     y: number
     width: number
@@ -19,7 +18,6 @@ export interface BirdType {
 
 export class Bird implements BirdType {
 
-    flapStrength: number = 0
     x: number = 0
     y: number = 0
     width: number = 50
@@ -34,14 +32,13 @@ export class Bird implements BirdType {
         this.altitude = currentAltitude
         console.log('Starting altitude is:' , this.altitude)
         document.addEventListener('keydown' , (e) => {
-            if(this.isFlapping()) return
-            this.flap()
+            
             
             
         })
     
         document.addEventListener('keyup' , (e) => {
-            this.flapStrength = 0
+            
         })
         
 
@@ -60,9 +57,6 @@ export class Bird implements BirdType {
     }
 
     draw(context: CanvasRenderingContext2D): void {
-        if(this.isFlapping()) {
-            this.flapStrength = this.flapStrength * 0.9
-        }
         
         context.fillStyle = 'red'
         context.fillRect(this.x,this.y, this.width , this.height)
@@ -72,12 +66,11 @@ export class Bird implements BirdType {
     }
 
     flap() {
-        if(this.isFlapping()) throw new Error('the bird is already flapping')
-        this.velocityY = -this.velocityY                                              
+  
     }
 
     isFlapping(): boolean {
-        return this.flapStrength > 0
+        return false
     }
 
     hasLanded(): boolean {
