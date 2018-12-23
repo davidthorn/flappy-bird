@@ -11,11 +11,14 @@ const animate = (application: Application)  => {
 
 const runApp = () => {
 
-    const bird = new Bird()
+    const winHeight = 800
+    const winWidth = winHeight
+
+    const bird = new Bird(winHeight)
 
     const application = new Application({
-        w: window.innerWidth,
-        h: window.innerHeight
+        w: winWidth,
+        h: winHeight
     } , bird)
 
     window.addEventListener('load' , () => {
@@ -25,16 +28,6 @@ const runApp = () => {
         })
     })
 
-    document.addEventListener('keydown' , (e) => {
-        if(application.bird.isFlapping()) return
-        application.bird.flap()
-        
-    })
-
-    document.addEventListener('keyup' , (e) => {
-        application.bird.flapStrength = 0
-    })
-    
     return () => {
         if(application.canvas === undefined) return
         if(application.ctx === undefined) return
@@ -45,8 +38,8 @@ const runApp = () => {
         //     h: window.innerHeight
         // })
         application.setWindowInfo({
-            w: 800,
-            h: 800
+            w: winWidth,
+            h: winHeight
         })
         document.body.appendChild(canvas)
     }

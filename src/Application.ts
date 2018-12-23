@@ -61,7 +61,9 @@ export class Application implements ApplicationType {
         this.ctx.fillStyle = 'black'
         this.ctx.fillRect(0,0, this.win.w , this.win.h)
     
-        this.bird.fall(this.win.h)
+        let birdsAlt = this.win.h - (this.bird.y)
+
+        this.bird.fall(birdsAlt)
         this.bird.draw(this.ctx)
     }
 }

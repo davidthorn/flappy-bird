@@ -10,6 +10,7 @@ export interface BirdType {
     dx: number /// the accelaration x
     velocityY: number /// the accelaration y
     gravity: number
+    altitude: number
     fall(winHeight: number): void
     distanceCanFall(winHeight: number): number
     draw(context: CanvasRenderingContext2D): void
@@ -23,23 +24,39 @@ export class Bird implements BirdType {
     y: number = 0
     width: number = 50
     height: number = 50
-    rateOfAcceleration: number = 0.015
+    rateOfAcceleration: number = 0.025
     velocityY: number = 0
     gravity: number = 0
     dx: number = 1
+    altitude: number = 0
 
-    constructor(){}
+    constructor(currentAltitude: number){
+        this.altitude = currentAltitude
+        console.log('Starting altitude is:' , this.altitude)
+        document.addEventListener('keydown' , (e) => {
+            if(this.isFlapping()) return
+            this.flap()
+            
+            
+        })
+    
+        document.addEventListener('keyup' , (e) => {
+            this.flapStrength = 0
+        })
+        
 
-    fall(winHeight: number): void {
-        let d = this.distanceCanFall(winHeight)
-        let w = this.gravity + this.velocityY
-        this.y += d >= w ? w : d
     }
 
-    distanceCanFall(winHeight: number): number {
-        const totalFallingDistance = winHeight - this.height
-        const distance = totalFallingDistance - this.y
-        return distance < 0 ? 0 : distance
+    fall(): void {
+        if(this.hasLanded()) return
+        let d = this.distanceCanFall(this.altitude)
+        let fallAmount = d >= this.velocityY ? this.velocityY : d
+        this.y += fallAmount
+        this.altitude -= fallAmount
+    }
+
+    distanceCanFall(currentAltitude: number): number {
+        return currentAltitude >= this.height ? currentAltitude - this.height : currentAltitude
     }
 
     draw(context: CanvasRenderingContext2D): void {
@@ -56,11 +73,16 @@ export class Bird implements BirdType {
 
     flap() {
         if(this.isFlapping()) throw new Error('the bird is already flapping')
-        this.flapStrength = 1
+        this.velocityY = -this.velocityY                                              
     }
 
     isFlapping(): boolean {
         return this.flapStrength > 0
     }
+
+    hasLanded(): boolean {
+        return (this.altitude - this.height) === 0
+    }
+
 
 }
