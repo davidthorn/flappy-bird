@@ -28,6 +28,7 @@ export class Application implements ApplicationType {
     ctx: CanvasRenderingContext2D | undefined
     canvas: HTMLCanvasElement | undefined
     bird: BirdType 
+    canApplyGravity: boolean = true
 
     constructor(info: WinInfo, bird: BirdType) {
         this.win = info
@@ -60,11 +61,7 @@ export class Application implements ApplicationType {
         this.ctx.fillStyle = 'black'
         this.ctx.fillRect(0,0, this.win.w , this.win.h)
     
-        if(!this.hasBirdLanded()) {
-            this.gravitySpeed += this.gravity
-            this.bird.fall(this.gravitySpeed, this.win.h)
-        }
-
+        this.bird.fall(this.win.h)
         this.bird.draw(this.ctx)
     }
 }

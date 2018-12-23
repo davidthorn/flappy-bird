@@ -26,9 +26,13 @@ const runApp = () => {
     })
 
     document.addEventListener('keydown' , (e) => {
-        console.log('key down' , {
-            e
-        })
+        if(application.bird.isFlapping()) return
+        application.bird.flap()
+        
+    })
+
+    document.addEventListener('keyup' , (e) => {
+        application.bird.flapStrength = 0
     })
     
     return () => {
@@ -36,9 +40,13 @@ const runApp = () => {
         if(application.ctx === undefined) return
         const { canvas } = application
 
+        // application.setWindowInfo({
+        //     w: window.innerWidth,
+        //     h: window.innerHeight
+        // })
         application.setWindowInfo({
-            w: window.innerWidth,
-            h: window.innerHeight
+            w: 800,
+            h: 800
         })
         document.body.appendChild(canvas)
     }
