@@ -1,81 +1,56 @@
-import { fileURLToPath } from "url";
+import { timingSafeEqual } from "crypto";
 
 export interface BirdType {
-    isFlapping(): boolean
     x: number
     y: number
     width: number
     height: number
-    dx: number /// the accelaration x
-    velocityY: number /// the accelaration y
-    gravity: number
-    altitude: number
-    fall(winHeight: number): void
-    distanceCanFall(winHeight: number): number
     draw(context: CanvasRenderingContext2D): void
-    flap(): void
 }
 
 export class Bird implements BirdType {
-
-    x: number = 0
+    x: number = 100
     y: number = 0
     width: number = 50
     height: number = 50
-    rateOfAcceleration: number = 0.025
-    velocityY: number = 0
-    gravity: number = 0
-    dx: number = 1
-    altitude: number = 0
+    altitude: number
+    velocity: number = 0
+    gravity: number = 1
+    lift: number = -15
 
-    constructor(currentAltitude: number){
+    constructor(currentAltitude: number) {
         this.altitude = currentAltitude
-        console.log('Starting altitude is:' , this.altitude)
-        document.addEventListener('keydown' , (e) => {
-            
-            
-            
+        this.y = this.altitude / 2
+
+        document.addEventListener('keydown' , () => {
+            this.up()
         })
-    
-        document.addEventListener('keyup' , (e) => {
-            
-        })
+
+    }
+
+    up() {
+        this.velocity += this.lift   
         
-
-    }
-
-    fall(): void {
-        if(this.hasLanded()) return
-        let d = this.distanceCanFall(this.altitude)
-        let fallAmount = d >= this.velocityY ? this.velocityY : d
-        this.y += fallAmount
-        this.altitude -= fallAmount
-    }
-
-    distanceCanFall(currentAltitude: number): number {
-        return currentAltitude >= this.height ? currentAltitude - this.height : currentAltitude
     }
 
     draw(context: CanvasRenderingContext2D): void {
-        
+
+        this.velocity += this.gravity
+        this.velocity *= 0.99
+        this.y += this.velocity
+
+        if(this.y > this.altitude - this.width / 2) {
+            this.y = this.altitude - this.width / 2
+            this.velocity = 0
+        }
+
+        context.beginPath()
         context.fillStyle = 'red'
-        context.fillRect(this.x,this.y, this.width , this.height)
+        context.arc(this.x, this.y, this.width / 2, 0, 2 * Math.PI)
+        context.fill()
+        context.closePath()
 
-        this.velocityY += this.gravity
-        this.gravity += this.rateOfAcceleration
+
     }
-
-    flap() {
-  
-    }
-
-    isFlapping(): boolean {
-        return false
-    }
-
-    hasLanded(): boolean {
-        return (this.altitude - this.height) === 0
-    }
-
 
 }

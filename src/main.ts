@@ -3,10 +3,12 @@ import { Bird } from './Bird'
 
 const animate = (application: Application)  => {
     
-    application.draw()
     requestAnimationFrame(() => {
-        animate(application)
+         application.draw()
+         animate(application)
     })
+
+    
 }
 
 const runApp = () => {
@@ -23,9 +25,13 @@ const runApp = () => {
 
     window.addEventListener('load' , () => {
         application.initialise(document.createElement('canvas') as HTMLCanvasElement)
-        requestAnimationFrame(() => {
-            animate(application)
+        
+        animate(application)
+        document.addEventListener('dblclick' , () => {
+            
         })
+
+        
     })
 
     return () => {
@@ -42,6 +48,7 @@ const runApp = () => {
             h: winHeight
         })
         document.body.appendChild(canvas)
+        
     }
 }
 

@@ -15,7 +15,6 @@ export interface ApplicationType {
     ctx: CanvasRenderingContext2D | undefined
     canvas: HTMLCanvasElement | undefined
     bird: BirdType
-    hasBirdLanded(): boolean
     setWindowInfo(info: WinInfo): void
     draw(): void
 }
@@ -41,12 +40,6 @@ export class Application implements ApplicationType {
         this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D
     }
 
-    hasBirdLanded(): boolean {
-        const { h } = this.win
-        const { y, height } = this.bird
-        return this.bird.distanceCanFall(h) === 0
-    }
-
     setWindowInfo(info: WinInfo): void {
         this.win = info
         if(this.canvas === undefined) throw new Error('Canvas cannot be undefined')
@@ -55,15 +48,18 @@ export class Application implements ApplicationType {
         
     }
 
+    y: number = 10
     draw(): void {
         if(this.ctx === undefined) throw new Error('Canvas cannot be undefined')
-        this.ctx.clearRect(0,0,this.win.w, this.win.h)
         this.ctx.fillStyle = 'black'
+        //this.ctx.clearRect(0,0,  this.win.w , this.win.h)
         this.ctx.fillRect(0,0, this.win.w , this.win.h)
-    
+        console.log('drawing')
         let birdsAlt = this.win.h - (this.bird.y)
 
-        this.bird.fall(birdsAlt)
+        //this.ctx.fillStyle = 'blue'
+        //this.ctx.fillRect(10, this.y, 20, 20)
+        //this.y += 15        
         this.bird.draw(this.ctx)
     }
 }
